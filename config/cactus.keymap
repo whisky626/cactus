@@ -1,0 +1,459 @@
+/*
+ * Copyright (c) 2022 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/ext_power.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/outputs.h>
+
+
+#define DEFAULT 0
+#define MAC    1
+#define PAD    2
+#define NUM    3
+#define ADJ    4
+
+/ {
+        keymap {
+                compatible = "zmk,keymap";
+
+                default_layer {
+/* QWERTY
+ * ------------------------------------------------------------------------------------------------------------------------------
+ * |   Q   |   W   | E/ESC |   R   |   T   |-----------------------------------|   Y   | U/PGUP| I/INS |   O   |   P   | 
+ * |   A   |   S   | D/DEL |   F   |   G   |-----------------------------------| H/HOME| J/PGDN|   K   |   L   | ENTER | 
+ * |   Z   |   X   |   C   |   V   |   B   | ----------------------------------|  N/UP |  M/DN |  ALT  |  WIN  | SHIFT | 
+ * ------------------------|  CTRL | SPACE | ----------------------------------|  BSPC |  MO 3 |  mute |----------------
+ */
+                        bindings = <
+ &kp  Q        &kp  W        &eesc         &kp  R        &kp  T                          &kp  Y        &upgup        &iins         &kp  O        &kp  P       
+ &kp  A        &kp  S        &ddel         &kp  F        &kp  G                          &hhome        &jpgdn        &kp  K        &kp  L        &kp  ENTER   
+ &kp  Z        &kp  X        &kp  C        &kp  V        &kp  B                          &nup          &mdown        &kp  RALT     &kp  RGUI     &kp  RSHFT 
+                                           &kp LCTRL     &kp SPACE                       &kp BSPC      &mo NUM       &kp C_MUTE
+                  >;
+sensor-bindings = <&inc_dec_kp RIGHT LEFT>;
+		  };
+
+                 mac_layer {
+/* MAC
+ * ------------------------------------------------------------------------------------------------------------------------------
+ * |   Q   |   W   | E/ESC |   R   |   T   |-----------------------------------|   Y   | U/PGUP| I/INS |   O   |   P   | 
+ * |   A   |   S   | D/DEL |   F   |   G   |-----------------------------------| H/HOME| J/PGDN|   K   |   L   | ENTER | 
+ * |   Z   |   X   |   C   |   V   |   B   | ----------------------------------|  N/UP |  M/DN |  ALT  |  CTRL | SHIFT | 
+ * ------------------------|command| SPACE | ----------------------------------|  BSPC |  MO 3 |  mute |---------------
+ */
+                        bindings = <
+ &kp  Q        &kp  W        &eesc         &kp  R        &kp  T                          &kp  Y        &upgup        &iins         &kp  O        &kp  P       
+ &kp  A        &kp  S        &ddel         &kp  F        &kp  G                          &hhome        &jpgdn        &kp  K        &kp  L        &kp  ENTER   
+ &kp  Z        &kp  X        &kp  C        &kp  V        &kp  B                          &nup          &mdown        &kp  RALT     &kp  LCTRL    &kp  RSHFT 
+                                           &kp LCMD      &kp SPACE                       &kp BSPC      &mo NUM       &kp C_MUTE
+                  >;
+sensor-bindings = <&inc_dec_kp RIGHT LEFT>;
+		  };
+
+
+                pad_layer {
+/* PAD
+ * ------------------------------------------------------------------------------------------------------------------------------
+ * |   7   |   8   |   9   |  UNDO |  ESC  |-----------------------------------|       | PG_UP |  INS  |       |  DEL  | 
+ * |   4   |   5   |   6   |  COPY | PASTE |-----------------------------------|  HOME | PG_DN |       |  lock | ENTER | 
+ * |   1   |   2   |   3   |   .   |   0   | ----------------------------------|       |       |  ALT  |  WIN  | SHIFT | 
+ * ------------------------|  CTRL | SPACE | ----------------------------------|  BSPC |  MO 3 |  mute |---------------
+ */
+                        bindings = <
+ &kp  KP_N7        &kp  KP_N8        &kp  KP_N9       &kp  LC(Z)        &kp  ESC          &none       &kp  PG_UP  &kp  INS      &none                 &kp  DEL       
+ &kp  KP_N4        &kp  KP_N5        &kp  KP_N6       &kp  LC(C)        &kp  LC(V)        &kp  HOME   &kp  PG_DN  &none         &kp KP_NUMLOCK        &kp  ENTER   
+ &kp  KP_N1        &kp  KP_N2        &kp  KP_N3       &kp  KP_DOT       &kp  KP_N0        &none       &none       &kp  RALT     &kp  RGUI             &kp  RSHFT 
+                                                      &kp  LCTRL        &kp SPACE         &kp BSPC    &mo NUM     &kp C_MUTE
+                  >;
+sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+		  };
+
+                 num_layer {
+/* NUM
+ * ------------------------------------------------------------------------------------------------------------------------------
+ * |   7   |   8   |   9   |       |       |-----------------------------------|   F1   |   F2   |   F3   |   F4   |   F5   | 
+ * |   4   |   5   |   6   |       |       |-----------------------------------|   F6   |   F7   |   F8   |   F9   |   F10  | 
+ * |   1   |   2   |   3   |   .   |   0   | ----------------------------------|   F11  |   F12  |        |        |        | 
+ * ----------------        |  CTRL |  TO 4 | ----------------------------------|  BSPC  |        |  mute |---------------
+ */
+                        bindings = <
+ &kp  N7       &kp  N8       &kp  N9       &trans        &trans                         &kp  F1       &kp  F2       &kp  F3       &kp  F4       &kp F5       
+ &kp  N4       &kp  N5       &kp  N6       &trans        &trans                         &kp  F6       &kp  F7       &kp  F8       &kp  F9       &kp F10
+ &kp  N1       &kp  N2       &kp  N3       &kp  KP_DOT  &kp  KP_N0                      &kp  F11      &kp F12       &trans        &trans        &trans 
+                                           &trans       &to ADJ                         &trans        &trans        &kp C_MUTE
+                  >;
+sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+	          };
+
+                 adj_layer {
+/* ADJ
+ * ------------------------------------------------------------------------------------------------------------------------------
+ * |  BT0  |  BT1  |  BT2  |  BT3  |  BT4  |-----------------------------------|       |       |       |  OUT  |       | 
+ * |       |       |       |       |       |-----------------------------------|       |       |       |       |       | 
+ * |  boot | RESET |BT_CLR |       |       | ----------------------------------|       |       |       | RESET |  boot | 
+ * ----------------        |  TO 1 |  TO 0 | ----------------------------------| TO 2  |       |  mute |-----------------
+ */
+                        bindings = <  
+ &bt  BT_SEL 0    &bt  BT_SEL 1     &bt  BT_SEL 2     &bt  BT_SEL 3      &bt  BT_SEL 4                   &none            &none             &none             &out OUT_TOG       &none            
+ &none            &none             &none             &none              &none                           &none            &none             &none             &none              &none  
+ &bootloader      &sys_reset        &bt BT_CLR        &none              &none                           &none            &none             &none             &sys_reset         &bootloader
+                                                      &to MAC            &to DEFAULT                     &to PAD          &none             &kp C_MUTE         
+                    >;
+sensor-bindings = <&inc_dec_kp RIGHT LEFT>;
+	            };
+
+                
+        };
+
+    behaviors {
+     
+        nup: n_up {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp N>, <&kp UP>;
+            mods = <(MOD_RSFT)>;
+        };
+
+        mdown: m_down {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp M>, <&kp DOWN>;
+            mods = <(MOD_RSFT)>;
+        };
+
+        ddel: d_del {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp D>, <&kp DEL>;
+            mods = <(MOD_RSFT)>;
+        };
+
+        iins: i_ins {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp I>, <&kp INS>;
+            mods = <(MOD_RSFT)>;
+        };
+
+        upgup: u_pgup {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp U>, <&kp PG_UP>;
+            mods = <(MOD_RSFT)>;
+        };
+
+        jpgdn: j_pgdn {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp J>, <&kp PG_DN>;
+            mods = <(MOD_RSFT)>;
+        };
+
+        hhome: h_home {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp H>, <&kp HOME>;
+            mods = <(MOD_RSFT)>;
+        };
+
+        leftup: left_up {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT>, <&kp UP>;
+            mods = <(MOD_RSFT)>;
+        };
+
+        eesc: e_esc {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp E>, <&kp ESC>;
+            mods = <(MOD_RSFT)>;
+        };
+
+        rightdown: right_down {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp RIGHT>, <&kp DOWN>;
+            mods = <(MOD_RSFT)>;
+        };
+  
+
+  };
+
+combos {
+        compatible = "zmk,combos";
+
+        combo_tab {
+            timeout-ms = <50>;
+            key-positions = <0 1>;
+            bindings = <&kp TAB>;
+        };
+
+        combo_caps {
+            timeout-ms = <50>;
+            key-positions = <10 11>;
+            bindings = <&kp CAPS>;
+        };
+
+        combo_del {
+            timeout-ms = <50>;
+            key-positions = <8 9>;
+            bindings = <&kp DEL>;
+        };
+
+        combo_1 {
+            timeout-ms = <50>;
+            key-positions = <0 10>;
+            bindings = <&kp N1>;
+        };
+
+        combo_2 {
+            timeout-ms = <50>;
+            key-positions = <1 11>;
+            bindings = <&kp N2>;
+        };
+
+combo_3 {
+            timeout-ms = <50>;
+            key-positions = <2 12>;
+            bindings = <&kp N3>;
+        };
+
+combo_4 {
+            timeout-ms = <50>;
+            key-positions = <3 13>;
+            bindings = <&kp N4>;
+        };
+
+combo_5 {
+            timeout-ms = <50>;
+            key-positions = <4 14>;
+            bindings = <&kp N5>;
+        };
+
+combo_6 {
+            timeout-ms = <50>;
+            key-positions = <5 15>;
+            bindings = <&kp N6>;
+        };
+
+combo_7 {
+            timeout-ms = <50>;
+            key-positions = <6 16>;
+            bindings = <&kp N7>;
+        };
+
+combo_8 {
+            timeout-ms = <50>;
+            key-positions = <7 17>;
+            bindings = <&kp N8>;
+        };
+
+combo_9 {
+            timeout-ms = <50>;
+            key-positions = <8 18>;
+            bindings = <&kp N9>;
+        };
+
+combo_0 {
+            timeout-ms = <50>;
+            key-positions = <9 19>;
+            bindings = <&kp N0>;
+        };
+
+combo_minus {
+            timeout-ms = <50>;
+            key-positions = <6 7>;
+            bindings = <&kp MINUS>;
+        };
+
+combo_equal {
+            timeout-ms = <50>;
+            key-positions = <7 8>;
+            bindings = <&kp EQUAL>;
+        };
+
+combo_colon {
+            timeout-ms = <50>;
+            key-positions = <11 12>;
+            bindings = <&kp RS(SEMI)>;
+        };
+
+combo_semi {
+            timeout-ms = <50>;
+            key-positions = <11 12 13>;
+            bindings = <&kp SEMI>;
+        };
+
+combo_quote {
+            timeout-ms = <50>;
+            key-positions = <17 18>;
+            bindings = <&kp RS(SQT)>;
+        };
+
+combo_sqt {
+            timeout-ms = <50>;
+            key-positions = <16 17 18>;
+            bindings = <&kp SQT>;
+        };
+
+combo_lsbkt {
+            timeout-ms = <50>;
+            key-positions = <13 14>;
+            bindings = <&kp RS(N9)>;
+        };
+
+combo_rsbkt {
+            timeout-ms = <50>;
+            key-positions = <15 16>;
+            bindings = <&kp RS(N0)>;
+        };
+
+combo_lbkt {
+            timeout-ms = <50>;
+            key-positions = <12 13 14>;
+            bindings = <&kp LBKT>;
+        };
+
+combo_rbkt {
+            timeout-ms = <50>;
+            key-positions = <15 16 17>;
+            bindings = <&kp RBKT>;
+        };
+
+combo_lbbkt {
+            timeout-ms = <50>;
+            key-positions = <11 12 13 14>;
+            bindings = <&kp RS(LBKT)>;
+        };
+
+combo_rbbkt {
+            timeout-ms = <50>;
+            key-positions = <15 16 17 18>;
+            bindings = <&kp RS(RBKT)>;
+        };
+
+combo_comma {
+            timeout-ms = <50>;
+            key-positions = <21 22>;
+            bindings = <&kp COMMA>;
+        };
+
+combo_dot {
+            timeout-ms = <50>;
+            key-positions = <23 24>;
+            bindings = <&kp DOT>;
+        };
+
+combo_questionmark {
+            timeout-ms = <50>;
+            key-positions = <25 26>;
+            bindings = <&kp RS(SLASH)>;
+        };
+
+combo_bslh {
+            timeout-ms = <50>;
+            key-positions = <21 22 23>;
+            bindings = <&kp BSLH>;
+        };
+
+combo_exclamation {
+            timeout-ms = <50>;
+            key-positions = <21 22 23 24>;
+            bindings = <&kp RS(N1)>;
+        };
+
+combo_langlebk {
+            timeout-ms = <50>;
+            key-positions = <20 21 22>;
+            bindings = <&kp RS(COMMA)>;
+        };
+
+combo_ranglebk {
+            timeout-ms = <50>;
+            key-positions = <22 23 24>;
+            bindings = <&kp RS(DOT)>;
+        };
+
+
+combo_at {
+            timeout-ms = <50>;
+            key-positions = <4 10>;
+            bindings = <&kp RS(N2)>;
+        };
+   
+   combo_and {
+            timeout-ms = <50>;
+            key-positions = <10 12>;
+            bindings = <&kp RS(N7)>;
+        };
+
+combo_percent {
+            timeout-ms = <50>;
+            key-positions = <9 22>;
+            bindings = <&kp RS(N5)>;
+        };
+
+combo_dollar {
+            timeout-ms = <50>;
+            key-positions = <12 18>;
+            bindings = <&kp RS(N4)>;
+        };
+
+combo_poundsign {
+            timeout-ms = <50>;
+            key-positions = <9 11>;
+            bindings = <&kp RS(N3)>;
+        };
+
+
+combo_plus {
+            timeout-ms = <50>;
+            key-positions = <9 18>;
+            bindings = <&kp RS(EQUAL)>;
+        };
+
+combo_underline {
+            timeout-ms = <50>;
+            key-positions = <6 18>;
+            bindings = <&kp RS(MINUS)>;
+        };
+
+combo_multiply {
+            timeout-ms = <50>;
+            key-positions = <9 26>;
+            bindings = <&kp RS(N8)>;
+        };
+
+combo_divide {
+            timeout-ms = <50>;
+            key-positions = <12 23>;
+            bindings = <&kp SLASH>;
+        };
+
+combo_power {
+            timeout-ms = <50>;
+            key-positions = <1 9>;
+            bindings = <&kp RS(N6)>;
+        };
+
+combo_wave {
+            timeout-ms = <50>;
+            key-positions = <1 2>;
+            bindings = <&kp RS(GRAVE)>;
+        };
+
+combo_grave {
+            timeout-ms = <50>;
+            key-positions = <1 2 3>;
+            bindings = <&kp GRAVE>;
+        };
+
+    };
+
+};
