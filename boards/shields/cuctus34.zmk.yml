@@ -2,13 +2,11 @@ file_format: "1"
 id: cuctus34
 name: cuctus34
 type: shield
-url: https://github.com/whisky626/cuctus
+url: https://github.com/whisky626/cuctus/
 requires: [pro_micro]
-exposes: [i2c_oled]
 features:
   - keys
   - encoder
-  - display
 siblings:
   - cuctus34_left
   - cuctus34_right
